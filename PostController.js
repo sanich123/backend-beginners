@@ -1,3 +1,4 @@
+import { response } from "express";
 import post from "./post.js";
 
 class PostController {
@@ -44,7 +45,6 @@ class PostController {
             }
             const updatedPost = await post.findByIdAndUpdate(publication._id, publication, {new: true});
             return res.json(updatedPost);
-
         }
         catch (e) {
             res.status(500).json(e)
@@ -52,8 +52,13 @@ class PostController {
     }
 
     async delete(req, res) {
-                try {
-
+        try {
+            const {id} = req.params;
+            if (!id) {
+                response.status(400).json({message: 'Id не указан'})
+            }
+            const deletedPost = await post.findByIdAndDelete(id);
+            return res.json(deletedPost);
         }
         catch (e) {
             res.status(500).json(e)
